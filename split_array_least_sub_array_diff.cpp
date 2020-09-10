@@ -46,7 +46,7 @@ tuple<vector<int>, vector<int>> split(vector<int> &vec)
 		}
 	}
 
-	std::set_difference(begin(vec), end(vec), begin(subarray1), end(subarray2), back_inserter(subarray2));
+	std::set_difference(begin(vec), end(vec), begin(subarray1), end(subarray1), back_inserter(subarray2));
 
 	return std::make_tuple(subarray1, subarray2);
 }
