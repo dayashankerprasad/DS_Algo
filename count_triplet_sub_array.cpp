@@ -1,3 +1,8 @@
+/**
+ * Find all triplets in a given array where sum of 2 equals to 3.
+ * array = { 5, 6, 4, 1, 3, 2 };
+ * Triplets = (1, 5, 6), (2, 4, 6), (1, 4, 5), (2, 3, 5), (1, 3, 4), (1, 2, 3)
+ */ 
 #include <iostream>
 #include <algorithm>
 #include <vector>
