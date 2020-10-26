@@ -45,6 +45,9 @@ void addNodeAtBeg(NodePtr &head, int32_t data)
 
 NodePtr findNode(NodePtr head, int32_t data)
 {
+	if (head == nullptr)
+		return nullptr;
+
 	NodePtr temp = head;
 	do 
 	{
@@ -58,6 +61,9 @@ NodePtr findNode(NodePtr head, int32_t data)
 
 bool removeNode(NodePtr &head, int32_t data)
 {
+	if (head == nullptr)
+		return false;
+
 	if (head->data == data)
 	{
 		NodePtr lastNode = head;
@@ -92,6 +98,9 @@ bool removeNode(NodePtr &head, int32_t data)
 
 void reverse(NodePtr &head)
 {
+	if (head == nullptr)
+		return;
+
 	NodePtr prev = nullptr, cur = head, next = nullptr;
 
 	do
@@ -108,6 +117,9 @@ void reverse(NodePtr &head)
 
 void print(NodePtr head)
 {
+	if (head == nullptr)
+		return;
+
 	NodePtr currentNode = head;
 	do
 	{
@@ -116,6 +128,22 @@ void print(NodePtr head)
 	} while (currentNode != head);
 
 	cout << endl;
+}
+
+void destroy(NodePtr &head)
+{
+	if (head == nullptr)
+		return;
+
+	NodePtr temp = head;
+	do 
+	{
+		NodePtr current = temp;
+		temp = temp->next;
+		delete current;
+	} while (temp != head);
+	
+	head = nullptr;
 }
 
 int32_t main()
@@ -144,6 +172,8 @@ int32_t main()
 	reverse(head);
 
 	print(head);
+
+	destroy(head);
 
 	return 0;
 }
