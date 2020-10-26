@@ -2,6 +2,9 @@
 
 using namespace std;
 
+struct Node;
+using NodePtr = Node *;
+
 struct Node
 {
 	Node(int32_t dataArgs, Node *nextArgs=nullptr):
@@ -11,10 +14,8 @@ struct Node
 	}
 
 	int32_t data{0};
-	Node *next{nullptr};
+	NodePtr next{nullptr};
 };
-
-using NodePtr = Node *;
 
 void addNodeAtEnd(NodePtr &head, int32_t data)
 {
