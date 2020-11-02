@@ -52,6 +52,47 @@ uint32_t longestIncreasingSequenceLength_2(vector<int32_t> const &array)
 	return seq.size();
 }
 
+//O(n^2)
+uint32_t longestIncreasingSequenceLength_3(vector<int32_t> const &array)
+{
+	vector<int32_t> table(array.size(), 1); //Stores max length till individual index
+	vector<int32_t> seq(array.size(), -1); // Chain of indices causing subseq to be max length
+	int maxIndex = 0;
+	for(uint32_t i = 1; i < array.size(); ++i)
+	{
+		for(uint32_t j = 0; j < i; ++j)
+		{
+			if (array[i] > array[j] && (table[j] + 1) > table[i])
+			{
+				table[i] = table[j] + 1;
+				seq[i] = j;
+			}
+		}
+		
+		if (table[i] > table[maxIndex])
+			maxIndex = i;
+	}
+
+	vector<int> seqIndex; //Actual indices creating largest length subsequence
+	seqIndex.push_back(maxIndex);
+
+	for(int i = maxIndex; i >= 0; i = seq[i])
+	{
+		if (seq[i] >= 0)
+			seqIndex.push_back(seq[i]);
+	}
+
+	vector<int> subSeq; //Finally all the elements creating largest length sub sequence
+	for (std::vector<int>::reverse_iterator rit = seqIndex.rbegin(); rit!= seqIndex.rend(); ++rit)
+		subSeq.push_back(array[*rit]);
+
+	for(auto const i: subSeq)
+		cout << i << " ";
+	cout << endl;
+
+	return table[maxIndex];
+}
+
 int32_t main()
 {
 	cout << longestIncreasingSequenceLength({1, 2, 3, 4, 5, 3, 5, 6}) << endl;
@@ -61,6 +102,10 @@ int32_t main()
 	cout << longestIncreasingSequenceLength_2({1, 2, 3, 4, 5, 3, 5, 6}) << endl;
 	cout << longestIncreasingSequenceLength_2({1, 2, 1, 2}) << endl;
 	cout << longestIncreasingSequenceLength_2({10, 9, 2, 3, 4, 5, 6}) << endl;
+
+	cout << longestIncreasingSequenceLength_3({1, 2, 3, 4, 5, 3, 5, 6}) << endl;
+	cout << longestIncreasingSequenceLength_3({1, 2, 1, 2}) << endl;
+	cout << longestIncreasingSequenceLength_3({10, 9, 2, 3, 4, 5, 6}) << endl;
 
 	return 0;
 }
