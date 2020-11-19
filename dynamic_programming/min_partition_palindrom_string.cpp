@@ -52,7 +52,7 @@ int minimumParition(string const &str)
 			}
 	}
 
-	    return dp[size - 1];
+    return dp[size - 1];
 }
 
 int main()
