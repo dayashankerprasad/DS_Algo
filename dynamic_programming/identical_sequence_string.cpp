@@ -40,16 +40,16 @@ int distinctWays(string const &a, string const &b)
             else if(j ==0)
             {
                 if(a[i] == b[j])
-                    dp[i][j] = dp[i - 1][j] + 1; //if matached top charac + 1
+                    dp[i][j] = dp[i - 1][j] + 1;
                 else
-                    dp[i][j] = dp[i - 1][j]; //if not matched then top charac combinations
+                    dp[i][j] = dp[i - 1][j];
             }
             else
             {
                 if(a[i] == b[j])
-                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]; //nCr=(n-1)C(r-1) + (n-1)Cr
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
                 else
-                    dp[i][j]=dp[i - 1][j]; //top level combo bring down
+                    dp[i][j]=dp[i - 1][j];
             }
         }
     }
