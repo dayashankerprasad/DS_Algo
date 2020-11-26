@@ -30,6 +30,8 @@ BinaryTree * insertBST(BinaryTree *root, int32_t data)
 	return root;
 }
 
+namespace approach1
+{
 int maxValue(BinaryTree *tree)
 {
 	int val = 0;
@@ -62,6 +64,32 @@ bool validateBst(BinaryTree *tree)
 
   return true;
 }
+}
+
+namespace approach2
+{
+
+void inOrder(BinaryTree *root, vector<int> &inOrderData)
+{
+	if (root != nullptr)
+	{
+		inOrder(root->left, inOrderData);
+		inOrderData.push_back(root->value);
+		inOrder(root->right, inOrderData);
+	}
+}
+
+bool validateBst(BinaryTree *tree) 
+{
+	vector<int> inOrderData;
+	inOrder(tree, inOrderData);
+	for (int i = 1; i < inOrderData.size(); ++i)
+		if (inOrderData[i] < inOrderData[i-1])
+			return false;
+	return true;
+}
+
+}
 
 BinaryTree * createBST(vector<int> const values)
 {
@@ -74,15 +102,17 @@ BinaryTree * createBST(vector<int> const values)
 int32_t main()
 {
 	BinaryTree *tree1 = createBST({10, 15, 22, 13, 2, 5, 6, 1, 14});
-	cout << "Valid: " << validateBst(tree1) << endl;
+	cout << "Valid[approach1]: " << approach1::validateBst(tree1) << endl;
+	cout << "Valid[approach2]: " << approach2::validateBst(tree1) << endl;
 
 	BinaryTree *root = new BinaryTree(12);
 	root->left = new BinaryTree(5);
 	root->right = new BinaryTree(15);
 	root->left->right = new BinaryTree(13);
-	
-	cout << "Valid: " << validateBst(root) << endl;
-	
+
+	cout << "Valid[approach1]: " << approach1::validateBst(root) << endl;
+	cout << "Valid[approach2]: " << approach2::validateBst(root) << endl;
+
 	return 0;
 }
 
