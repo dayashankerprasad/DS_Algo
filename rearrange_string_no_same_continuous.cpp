@@ -16,7 +16,7 @@
 
 using namespace std;
 
-std::pair<char, int32_t> maxFrequency(unordered_map<char, int32_t> const &charFreq)
+std::pair<char, int32_t> maxFrequency(unordered_map<char, int32_t> const &charFreq, char prevChar = 0)
 {
 	if (charFreq.size() == 1)
 		return {charFreq.begin()->first, charFreq.begin()->second};
@@ -26,10 +26,21 @@ std::pair<char, int32_t> maxFrequency(unordered_map<char, int32_t> const &charFr
 	
 	for (auto const &val: charFreq)
 	{
-		if (val.second >= freq)
+		if (prevChar == 0)
 		{
-			freq = val.second;
-			ch = val.first;
+			if (val.second >= freq)
+			{
+				freq = val.second;
+				ch = val.first;
+			}
+		}
+		else
+		{
+			if (prevChar !=  val.first && val.second >= freq)
+			{
+				freq = val.second;
+				ch = val.first;
+			}
 		}
 	}
 
@@ -51,7 +62,7 @@ string rearrage(string const &str)
 
 	while (true)
 	{
-		auto [ch, freq] = maxFrequency(charFreq);
+		auto [ch, freq] = maxFrequency(charFreq, prevChar);
 
 		if (ch ==  prevChar)
 			return "";
@@ -75,5 +86,6 @@ int32_t main()
 {
 	cout << rearrage("aappp") << endl; // papap
 	cout << rearrage("aaab") << endl;  // ""
+	cout << rearrage("aab") << endl;  // ""
 	return 0;
 }
