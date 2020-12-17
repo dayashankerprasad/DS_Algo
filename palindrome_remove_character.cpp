@@ -16,6 +16,7 @@ bool isPalindrom(string const &str, int32_t left,  int32_t right)
 	}
 	return true;
 }
+
 bool isPalindromeIfACharacterRemoved(string const &str)
 {
 	int32_t left = 0, right = str.length() - 1;
