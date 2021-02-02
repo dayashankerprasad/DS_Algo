@@ -5,6 +5,9 @@ using namespace std;
 
 constexpr uint32_t NEED_TO_FILL{0};
 
+/**
+ * find very first row and col which needs to be filled
+ */
 bool findVacant(std::vector<std::vector<uint32_t>> const &grid, uint32_t &row, uint32_t &col)
 {
 	for (row = 0; row < grid.size(); ++row)
@@ -15,6 +18,9 @@ bool findVacant(std::vector<std::vector<uint32_t>> const &grid, uint32_t &row, u
 	return false;
 }
 
+/**
+ * test whether number used in entire row or not
+ */
 bool usedInRow(std::vector<std::vector<uint32_t>> const &grid, uint32_t row, uint32_t num)
 {
 	for (uint32_t col = 0; col < grid.size(); ++col)
@@ -24,13 +30,16 @@ bool usedInRow(std::vector<std::vector<uint32_t>> const &grid, uint32_t row, uin
 	return false;
 }
 
+/**
+ * test whether number used in entire column or not
+ */
 bool usedInCol(std::vector<std::vector<uint32_t>> const &grid, uint32_t col, uint32_t num)
 {
 	for (uint32_t row = 0; row < grid.size(); ++row)
 		if (grid[row][col] == num)
 			return true;
 
-		return false;
+	return false;
 }
 
 bool usedInBox(std::vector<std::vector<uint32_t>> const &grid, uint32_t boxStartRow, uint32_t boxStartCol, uint32_t num)
