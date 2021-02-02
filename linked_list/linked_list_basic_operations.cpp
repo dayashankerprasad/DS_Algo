@@ -1,13 +1,14 @@
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
 struct Node;
-using NodePtr = Node *;
+using NodePtr = shared_ptr<Node>;
 
 struct Node
 {
-	Node(int32_t dataArgs, Node *nextArgs=nullptr):
+	Node(int32_t dataArgs, NodePtr nextArgs=nullptr):
 		data{dataArgs},
 		next{nextArgs}
 	{
@@ -17,22 +18,43 @@ struct Node
 	NodePtr next{nullptr};
 };
 
-void addNodeAtEnd(NodePtr &head, int32_t data)
+void pushBack(NodePtr &head, int32_t data)
 {
 	if (head == nullptr)
-		head = new Node(data);
+		head.reset(new Node(data));
 	else
 	{
-		Node *temp = head;
+		NodePtr temp = head;
 		for(; temp->next != nullptr; temp = temp->next);
-		temp->next = new Node(data);
+		temp->next.reset(new Node(data));
 	}
 }
 
-void addNodeAtBeg(NodePtr &head, int32_t data)
+void pushFront(NodePtr &head, int32_t data)
 {
-	NodePtr newNode = new Node(data, head);
-	head = newNode;
+	head.reset(new Node(data, head));
+}
+
+NodePtr popFront(NodePtr &head)
+{
+	NodePtr first = head;
+	if (head != nullptr) //if no node
+		head = head->next;
+	return first;
+}
+
+NodePtr popBack(NodePtr &head)
+{
+	NodePtr last = head, parentOfLast;
+	for (; last != nullptr && last->next != nullptr; parentOfLast = last, last = last->next);
+
+	if (last == nullptr); //if no node
+	else if (parentOfLast == nullptr) //if only one node
+		head.reset();
+	else
+		parentOfLast->next.reset();
+
+	return last;
 }
 
 NodePtr findNode(NodePtr head, int32_t data)
@@ -43,19 +65,18 @@ NodePtr findNode(NodePtr head, int32_t data)
 
 bool removeNode(NodePtr &head, int32_t data)
 {
-	NodePtr parent, current;
+	NodePtr parentOfLast, last;
 
-	for(current = head; current != nullptr && current->data != data; parent = current, current = current->next);
+	for(last = head, parentOfLast = nullptr; last != nullptr && last->data != data; parentOfLast = last, last = last->next);
 
-	if (current == nullptr)
+	if (last == nullptr)
 		return false;
 
-	if (current == head)
+	if (last == head)
 		head = head->next;
 	else
-		parent->next = current->next;
+		parentOfLast->next = last->next;
 
-	delete current;
 	return true;
 }
 
@@ -83,30 +104,14 @@ void print(NodePtr head)
 
 int32_t main()
 {
-	NodePtr head = nullptr;
+	NodePtr head;
 
-	for(int i = 1; i <= 10; ++i)
-		addNodeAtEnd(head, i);
-
-	print(head);
-
-	for(int i = 11; i <= 20; ++i)
-		addNodeAtBeg(head, i);
-
-	print(head);
-
-	cout << findNode(head, 10) << endl;
-	cout << findNode(head, 30) << endl;
-
-	removeNode(head, 11);
-	removeNode(head, 10);
-	removeNode(head, 20);
-
-	print(head);
-
-	reverse(head);
+	for(auto const i: {9,8,7,6,5,4,3,2,1})
+		pushBack(head, i);
 
 	print(head);
 
 	return 0;
 }
+
+
