@@ -26,7 +26,8 @@ ostream & operator << (ostream &out, vector<T> const &vec)
 	return out << "\n";
 }
 
-void rotate_90_Cockwise(vector<vector<int32_t>> &matrix)
+template<typename T>
+void rotate_90_Cockwise(vector<vector<T>> &matrix)
 {
 	uint32_t const size = matrix.size();
 
@@ -43,10 +44,12 @@ void rotate_90_Cockwise(vector<vector<int32_t>> &matrix)
 
 int main()
 {
-	vector<vector<int32_t>> matrix = {
-		{1, 4, 7},
-		{2, 5, 8},
-		{3, 6, 9},
+	vector<vector<char>> matrix = {
+		{'a', 'f', 'k', 'p', 'u'},
+		{'b', 'g', 'l', 'q', 'v'},
+		{'c', 'h', 'm', 'r', 'w'},
+		{'d', 'i', 'n', 's', 'x'},
+		{'e', 'j', 'o', 't', 'y'}
 	};
 
 	cout << "Original matrix:\n" << matrix << endl;
