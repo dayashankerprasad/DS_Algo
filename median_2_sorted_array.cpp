@@ -3,6 +3,10 @@
 
 using namespace std;
 
+/**
+ * array1 size must be smaller than array2
+ */
+
 double findMedian(vector<int32_t> const &array1, vector<int32_t> const &array2)
 {
 	int32_t const size1 = array1.size(), size2 = array2.size(), halfLen = (size1 + size2 + 1) / 2;
@@ -28,7 +32,7 @@ double findMedian(vector<int32_t> const &array1, vector<int32_t> const &array2)
 			else
 				maxLeft = max(array1[mid - 1], array2[j - 1]);
 
-			if ((size1 + size2) % 2 == 1)
+			if ((size1 + size2) & 1 == 1)
 				return maxLeft;
 
 			int32_t minRight = 0;
@@ -59,3 +63,4 @@ int32_t main()
 	cout << findMedianSortedArrays({1, 2, 5, 6, 9}, {3, 4, 7, 8}) << endl; 
 	return 0;
 }
+
