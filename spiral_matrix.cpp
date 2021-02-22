@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 
 using namespace std;
 
@@ -14,6 +15,9 @@ ostream & operator << (ostream &out, vector<T> const &obj)
 		out << val << " ";
 	return out << "\n";
 }
+
+namespace solution1
+{
 
 vector<int32_t> spiralTraverse(vector<vector<int32_t>> const &array)
 {
@@ -49,6 +53,52 @@ vector<int32_t> spiralTraverse(vector<vector<int32_t>> const &array)
 	return traverse;
 }
 
+}
+
+namespace solution2
+{
+
+vector<int32_t> spiralTraverse(vector<vector<int32_t>> matrix)
+{
+	if (matrix.empty())
+		return {};
+
+	const array<array<int32_t, 2>, 4> shift = {
+		{{0, 1},
+		{1, 0},
+		{0, -1},
+		{-1, 0}}
+	};
+
+	vector<int32_t> traverse;
+
+	int32_t dir = 0, x = 0, y = 0;
+
+	for (int i = 0; i < matrix.size() * matrix.size(); ++i)
+	{
+		traverse.push_back(matrix[x][y]);
+
+		matrix[x][y] = 0; //assuming 0 is not the value of matrix
+
+		int32_t nextX = x + shift[dir][0], nextY = y + shift[dir][1];
+
+		if (nextX < 0 || nextX >= matrix.size() || nextY < 0 || nextY >= matrix.size() || matrix[nextX][nextY] == 0)
+		{
+			dir = (dir + 1) % 4;
+
+			nextX = x + shift[dir][0];
+			nextY = y + shift[dir][1];
+		}
+		
+		x = nextX;
+		y = nextY;
+	}
+
+	return traverse;
+}
+
+}
+
 int main()
 {
 	vector<vector<int>> matrix = {
@@ -58,7 +108,8 @@ int main()
 		{10, 9, 8, 7}
 	};
 
-	cout << "Spiral representation of matrix \n" << matrix << "\nis: " << spiralTraverse(matrix);
+	cout << "\nSpiral representation of matrix \n" << matrix << "is: " << solution1::spiralTraverse(matrix);
+	cout << "\nSpiral representation of matrix \n" << matrix << "is: " << solution2::spiralTraverse(matrix);
 	cout << "\nTerminating main()..." << endl;
 
 	return 0;
