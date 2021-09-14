@@ -25,8 +25,8 @@ int32_t eggDrop(int32_t eggCount, int32_t floorCount)
 namespace solution2
 {
 
- int32_t eggDrop(int32_t eggCount, int32_t floorCount)
- {
+int32_t eggDrop(int32_t eggCount, int32_t floorCount)
+{
 	vector<vector<int32_t>> table(eggCount + 1, vector<int32_t>(floorCount + 1, 0));
 
 	for(int32_t i = 0; i <= floorCount; ++i)

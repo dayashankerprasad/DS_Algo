@@ -62,7 +62,7 @@ void test(vector<int> &vec)
 
 int main()
 {
-	vector<int> vec1 = {1,2,3,4,5};
+	vector<int> vec1 = {1, 2, 3, 4, 5};
 	vector<int> vec2 = {100, 100, 90, 90, 80, 20, 20, 20};
 
 	test(vec1);
