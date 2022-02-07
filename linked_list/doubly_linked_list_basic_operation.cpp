@@ -8,13 +8,14 @@ class DLinkedList
 {
 	struct Node
 	{
-		Node(Type data, uint32_t &len): data_{move(data)}, len_{len}
+		Node(Type &data, uint32_t &len): data_{move(data)}, len_{len}
 		{
 			++len_;
 		}
 
 		~Node() noexcept
 		{
+			std::cout << "Deleting node for data: " << data_ << std::endl;
 			--len_;
 		}
 
@@ -32,18 +33,42 @@ public:
 	void popFront();
 
 	bool erase(Type const &data);
+	bool find(Type const &data);
 
-	Type const & front() const { return head_->data_; }
-	Type const & back() const { return tail_->data_; }
-
-	uint32_t size() const { return length_; }
-	bool empty() const { return head_ == nullptr && tail_ == nullptr; }
-	void clear() { head_ = tail_ = nullptr; }
+	Type const & front() const noexcept { return head_->data_; }
+	Type const & back() const noexcept { return tail_->data_; }
+	uint32_t size() const noexcept { return length_; }
+	bool empty() const noexcept { return head_ == nullptr && tail_ == nullptr; }
+	void clear() noexcept { head_ = tail_ = nullptr; }
 
 private:
 	shared_ptr<Node> createNode(Type &data)
 	{
-		return make_shared<Node>(move(data), length_);
+		return make_shared<Node>(data, length_);
+	}
+
+	shared_ptr<Node> __find(Type const &data) const
+	{
+		shared_ptr<Node> foundNode{nullptr};
+
+		for (shared_ptr<Node> headTemp = head_, tailTemp = tail_; headTemp != tailTemp; headTemp = headTemp->next_, tailTemp = tailTemp->prev_.lock())
+		{
+			if (headTemp->data_ == data)
+			{
+				foundNode = headTemp;
+				break;
+			}
+			else if (tailTemp->data_ == data)
+			{
+				foundNode = tailTemp;
+				break;
+			}
+
+			if (headTemp->next_ == tailTemp)
+				break;
+		}
+
+		return foundNode;
 	}
 
 	shared_ptr<Node> head_{nullptr}, tail_{nullptr};
@@ -105,24 +130,7 @@ void DLinkedList<Type>::popFront()
 template<typename Type>
 bool DLinkedList<Type>::erase(Type const &data)
 {
-	shared_ptr<Node> foundNode{nullptr};
-
-	for (shared_ptr<Node> headTemp = head_, tailTemp = tail_; headTemp != tailTemp; headTemp = headTemp->next_, tailTemp = tailTemp->prev_.lock())
-	{
-		if (headTemp->data_ == data)
-		{
-			foundNode = headTemp;
-			break;
-		}
-		else if (tailTemp->data_ == data)
-		{
-			foundNode = tailTemp;
-			break;
-		}
-
-		if (headTemp->next_ == tailTemp)
-			break;
-	}
+	shared_ptr<Node> foundNode = __find(data);
 
 	if (foundNode == nullptr)
 		return false;
@@ -133,6 +141,13 @@ bool DLinkedList<Type>::erase(Type const &data)
 	return true;
 }
 
+template<typename Type>
+bool DLinkedList<Type>::find(Type const &data)
+{
+	shared_ptr<Node> foundNode = __find(data);
+	return (foundNode != nullptr);
+}
+
 int32_t main()
 {
 	DLinkedList<int32_t> list;
@@ -140,32 +155,47 @@ int32_t main()
 	for (int32_t i = 1; i <= 10; ++i)
 		list.pushBack(i);
 
+	//list => 1 2 3 4 5 6 7 8 9 10
+
 	for (int32_t i = 11; i <= 20; ++i)
 		list.pushFront(i);
 
-	cout << "\nSize: " << list.size();
-	cout << "\nEmpty: " << boolalpha << list.empty();
+	//list => 20 19 18 17 16 15 14 13 12 11 1 2 3 4 5 6 7 8 9 10
+
+	cout << "\nSize: " << list.size(); //20
+	cout << "\nEmpty: " << boolalpha << list.empty() << endl; //false
 
 	for (int32_t i = 1; i <= 5; ++i)
+	{
+		cout << list.back() << " ";
 		list.popBack();
+	}
+
+	//list => 20 19 18 17 16 15 14 13 12 11 1 2 3 4 5
 
 	for (int32_t i = 1; i <= 5; ++i)
+	{
+		cout << list.front() << " ";
 		list.popFront();
+	}
 
-	cout << "\nSize: " << list.size();
-	cout << "\nEmpty: " << boolalpha << list.empty();
+	//list => 15 14 13 12 11 1 2 3 4 5
 
-	bool status = list.erase(11);
-	cout << "\nErase status: " << boolalpha << status;
+	cout << "\nSize: " << list.size(); //10
+	cout << "\nEmpty: " << boolalpha << list.empty() << endl; //false
 
-	status = list.erase(51);
-	cout << "\nErase status: " << boolalpha << status;
+	bool status = list.erase(11); //15 14 13 12 1 2 3 4 5
+	cout << "\nErase status: " << boolalpha << status << endl; //true
 
-	list.clear();
+	status = list.erase(51); //15 14 13 12 1 2 3 4 5
+	cout << "\nErase status: " << boolalpha << status << endl; //false
 
-	cout << "\nSize: " << list.size();
-	cout << "\nEmpty: " << boolalpha << list.empty();
+	list.clear(); //list =>
+
+	cout << "\nSize: " << list.size(); //0
+	cout << "\nEmpty: " << boolalpha << list.empty() << endl; //true
 
 	cout << "\nTerminating main()..." << endl;
 	return 0;
 }
+
